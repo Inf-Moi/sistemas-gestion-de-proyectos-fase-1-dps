@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+
+}
+
+datasource db {
+  // Usar SQLite
+  provider = "sqlite"
+  url      = "file:./dev.db"  // SQLite usará un archivo de base de datos local
+  
+  // Para usar PostgreSQL, comenta la parte de SQLite y descomenta la de PostgreSQL.
+  /*
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  */
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String   // Asegúrate de que este campo esté aquí
+  name      String?
+  projects  Project[] @relation("UserProjects")  // Relación inversa a 'owner' en 'Project'
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  ownerId     Int
+  owner       User     @relation("UserProjects", fields: [ownerId], references: [id]) // Relación con 'User'
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  projectId   Int
+  project     Project  @relation(fields: [projectId], references: [id]) // Relación con Project
+}
