@@ -1,6 +1,6 @@
-// services/api.ts
 
-const API_URL = 'https://api.tuservidor.com'; // Reemplaza con la URL de tu API
+
+const API_URL = 'http://localhost:3000/api'; 
 
 export interface ApiResponse {
   success: boolean;
